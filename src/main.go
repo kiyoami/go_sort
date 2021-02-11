@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"./dataset"
+	"./sort"
 )
 
 // sort 関数の実行時間を計測する
-func clocking(sourceData Datasets, sort func(Datasets), caption string) {
+func clocking(sourceData dataset.Datasets, sort func(dataset.Datasets), caption string) {
 	sourceLength := len(sourceData)
-	data := make(Datasets, sourceLength, sourceLength)
+	data := make(dataset.Datasets, sourceLength, sourceLength)
 	copy(data, sourceData)
 
 	startTime := time.Now()
@@ -20,13 +23,13 @@ func clocking(sourceData Datasets, sort func(Datasets), caption string) {
 }
 
 func main() {
-	sourceData := make(Datasets, 10000, 10000)
-	sourceData.create()
+	sourceData := make(dataset.Datasets, 20000, 20000)
+	sourceData.Create()
 	// sourceData.disp("ソート前")
 
-	clocking(sourceData, Buble, "バブル")
-	clocking(sourceData, Select, "選択")
-	clocking(sourceData, Insert, "挿入")
-	clocking(sourceData, Shell, "シェル")
-	clocking(sourceData, Quick, "クイック")
+	clocking(sourceData, sort.Buble, "バブル")
+	clocking(sourceData, sort.Select, "選択")
+	clocking(sourceData, sort.Insert, "挿入")
+	clocking(sourceData, sort.Shell, "シェル")
+	clocking(sourceData, sort.Quick, "クイック")
 }
