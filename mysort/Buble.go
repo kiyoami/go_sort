@@ -1,9 +1,11 @@
-package sort
+package mysort
 
 import "../dataset"
 
 // Buble バブルソート
-func Buble(data dataset.Datasets) {
+func Buble(sourceData dataset.Datasets) dataset.Datasets {
+	data := sourceData.Copy()
+
 	size := len(data)
 	for sorted := 0; sorted < size; sorted++ {
 		for i := 1; i < size-sorted; i++ {
@@ -12,4 +14,5 @@ func Buble(data dataset.Datasets) {
 			}
 		}
 	}
+	return data
 }

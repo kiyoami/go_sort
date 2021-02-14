@@ -1,20 +1,54 @@
-package sort
+package mysort
 
 import "../dataset"
 
 // Quick クイックソート
-func Quick(data dataset.Datasets) {
-	partition(data[0:len(data)])
-	// Insert(data) // 途中で止めた続きは挿入ソート
+func Quick(sourceData dataset.Datasets) dataset.Datasets {
+	data := sourceData.Copy()
+
+	type rng struct {
+		first int
+		last  int
+	}
+	spMax := 100
+	stack := make([]rng, spMax, spMax)
+	sp := 0
+
+	stack[sp] = rng{first: 0, last: len(data)}
+	sp++
+	for 0 < sp {
+		sp--
+		pop := stack[sp]
+		pivot := pop.first + partition(data[pop.first:pop.last]) // 分割
+
+		if pop.first < pivot {
+			if spMax <= sp {
+				stack = append(stack, rng{first: pop.first, last: pivot})
+				spMax++
+			} else {
+				stack[sp] = rng{first: pop.first, last: pivot}
+			}
+			sp++
+		}
+		if pivot+1 < pop.last {
+			if spMax <= sp {
+				stack = append(stack, rng{first: pivot, last: pop.last})
+				spMax++
+			} else {
+				stack[sp] = rng{first: pivot, last: pop.last}
+			}
+			sp++
+		}
+	}
+
+	Insert(data) // 途中で止めた続きは挿入ソート
+	return data
 }
 
-func partition(data dataset.Datasets) {
+func partition(data dataset.Datasets) int {
 	last := len(data) - 1
-	// if last < 10 { // 途中で止める
-	// 	return
-	// }
 	if last < 1 {
-		return
+		return last
 	}
 
 	// referenceBetter(data) // 最悪ケース回避の細工
@@ -41,12 +75,7 @@ func partition(data dataset.Datasets) {
 		data.Swap(0, j) // reference を分割したスライスの間に置く
 	}
 
-	if 0 < i {
-		partition(data[:i-1])
-	}
-	if i < last {
-		partition(data[i:])
-	}
+	return i
 }
 
 func referenceBetter(data dataset.Datasets) {
@@ -59,7 +88,7 @@ func referenceBetter(data dataset.Datasets) {
 
 	if (weightFirst <= weightMid && weightMid < weightLast) || (weightLast < weightMid && weightMid <= weightFirst) {
 		data.Swap(0, mid)
-	} else if (weightMid <= weightFirst && weightFirst < weightLast) || (weightLast < weightFirst && weightFirst <= weightMid) {
+	} else if (weightFirst < weightLast && weightLast <= weightMid) || (weightMid <= weightLast && weightLast < weightFirst) {
 		data.Swap(0, last)
 	}
 }

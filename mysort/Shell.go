@@ -1,4 +1,4 @@
-package sort
+package mysort
 
 import (
 	"math"
@@ -7,7 +7,9 @@ import (
 )
 
 // Shell シェルソート
-func Shell(data dataset.Datasets) {
+func Shell(sourceData dataset.Datasets) dataset.Datasets {
+	data := sourceData.Copy()
+
 	size := len(data)
 	base := 3
 	exponent := math.Floor(math.Log(float64(size)) / math.Log(float64(base)))
@@ -30,4 +32,5 @@ func Shell(data dataset.Datasets) {
 		}
 		step /= base
 	}
+	return data
 }

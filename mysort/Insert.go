@@ -1,9 +1,11 @@
-package sort
+package mysort
 
 import "../dataset"
 
 // Insert 挿入ソート
-func Insert(data dataset.Datasets) {
+func Insert(sourceData dataset.Datasets) dataset.Datasets {
+	data := sourceData.Copy()
+
 	size := len(data)
 	for sorted := 1; sorted < size; sorted++ {
 		pivot := 0 // 挿入位置が見つからないときは、先頭に追加する
@@ -18,4 +20,5 @@ func Insert(data dataset.Datasets) {
 			data.Rotate(pivot, sorted, 1)
 		}
 	}
+	return data
 }
